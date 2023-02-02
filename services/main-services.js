@@ -2,7 +2,6 @@ const createDBConnection = require('../configs/mysqlConnection')
 
 async function addNewTodo({ todo, userId }) {
   const dbConnection = await createDBConnection()
-
   const sql = 'INSERT INTO todo (todoId, todo, userId) VALUES (?, ?, ?)'
   const [rows] = await dbConnection.execute(sql, [
     crypto.randomUUID(),
@@ -29,7 +28,23 @@ async function findUser(userId) {
   return rows
 }
 
+async function removeTodo(todoId) {
+  const dbConnection = await createDBConnection()
+  const sql = 'DELETE FROM todo WHERE todoId = ?'
+  const result = await dbConnection.execute(sql, [todoId])
+
+  const response = {
+    ok: result.length !== 0 ? true : false,
+    message: 'Task deletes successfully !',
+    result: result,
+  }
+
+  await dbConnection.end()
+  return response
+}
+
 module.exports = {
   addNewTodo,
   findUser,
+  removeTodo,
 }

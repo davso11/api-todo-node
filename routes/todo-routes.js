@@ -5,6 +5,6 @@ const { auth } = require('../middlewares/auth-middleware')
 const router = express.Router()
 
 router.post('/', auth, todoControllers.createTodo)
-router.delete('/', todoControllers.removeTodo)
+router.delete('/:todoId', auth, todoControllers.removeTodo)
 
 module.exports = router
