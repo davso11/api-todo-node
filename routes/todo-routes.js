@@ -4,6 +4,7 @@ const { auth } = require('../middlewares/auth-middleware')
 
 const router = express.Router()
 
+router.get('/:userId', auth, todoControllers.getTodos)
 router.post('/', auth, todoControllers.createTodo)
 router.delete('/:todoId', auth, todoControllers.removeTodo)
 

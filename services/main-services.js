@@ -3,16 +3,15 @@ const createDBConnection = require('../configs/mysqlConnection')
 async function addNewTodo({ todo, userId }) {
   const dbConnection = await createDBConnection()
   const sql = 'INSERT INTO todo (todoId, todo, userId) VALUES (?, ?, ?)'
-  const [rows] = await dbConnection.execute(sql, [
-    crypto.randomUUID(),
-    todo,
-    userId,
-  ])
+
+  const todoId = crypto.randomUUID()
+  const todoObj = { todoId, todo, userId }
+  const [rows] = await dbConnection.execute(sql, Object.values(todoObj))
 
   const response = {
     ok: rows.length !== 0 ? true : false,
     message: 'Task created successfully !',
-    result: rows,
+    todoObj,
   }
 
   await dbConnection.end()
@@ -22,6 +21,16 @@ async function addNewTodo({ todo, userId }) {
 async function findUser(userId) {
   const dbConnection = await createDBConnection()
   const sql = 'SELECT userId FROM user WHERE userId = ?'
+  const [rows] = await dbConnection.execute(sql, [userId])
+
+  await dbConnection.end()
+  return rows
+}
+
+async function getAllTodos(userId) {
+  const dbConnection = await createDBConnection()
+  const sql =
+    'SELECT todoId, todo, updatedAt FROM todo WHERE userId = ? ORDER BY updatedAt DESC'
   const [rows] = await dbConnection.execute(sql, [userId])
 
   await dbConnection.end()
@@ -46,5 +55,6 @@ async function removeTodo(todoId) {
 module.exports = {
   addNewTodo,
   findUser,
+  getAllTodos,
   removeTodo,
 }

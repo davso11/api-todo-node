@@ -21,6 +21,30 @@ async function createTodo(req, res) {
   }
 }
 
+async function getTodos(req, res) {
+  try {
+    const { userId } = req.params
+
+    if (!userId) {
+      return res.status(400).json({
+        message: 'Must provide a user identifier',
+      })
+    }
+
+    const getResp = await services.getAllTodos(userId)
+
+    if (!getResp || getResp.length === 0) {
+      return res.status(424).json({
+        message: 'Cannot achieve that request',
+      })
+    }
+
+    res.status(200).json(getResp)
+  } catch (e) {
+    console.log('GetTodo controller error ', e)
+  }
+}
+
 async function removeTodo(req, res) {
   try {
     const deletionResp = await services.removeTodo(req.params.todoId)
@@ -37,6 +61,7 @@ async function removeTodo(req, res) {
 }
 
 module.exports = {
+  getTodos,
   createTodo,
   removeTodo,
 }

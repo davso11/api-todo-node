@@ -2,7 +2,7 @@ const services = require('../services/main-services')
 
 async function auth(req, res, next) {
   try {
-    const { userId } = req.body
+    const userId = req.body.userId ?? req.params.userId
 
     if (!userId) {
       return res.status(400).json({
