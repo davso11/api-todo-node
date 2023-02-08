@@ -6,6 +6,7 @@ const router = express.Router()
 
 router.get('/:userId', auth, todoControllers.getTodos)
 router.post('/', auth, todoControllers.createTodo)
+router.put('/', auth, todoControllers.updateStatus)
 router.delete('/:todoId', auth, todoControllers.removeTodo)
 
 module.exports = router
