@@ -1,6 +1,8 @@
 const services = require('../services/main-services')
 
 async function createTodo(req, res) {
+  const isImportant = req.body.isImportant ?? '0'
+
   try {
     if (!req.body.todo) {
       return res.status(400).json({
@@ -8,7 +10,8 @@ async function createTodo(req, res) {
       })
     }
 
-    const creationResp = await services.addNewTodo(req.body)
+    const todoObj = { ...req.body, isImportant }
+    const creationResp = await services.addNewTodo(todoObj)
     if (!creationResp.ok) {
       return res.status(424).json({
         message: 'Cannot achieve that request',

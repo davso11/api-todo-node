@@ -1,11 +1,14 @@
 const createDBConnection = require('../configs/mysqlConnection')
 
-async function addNewTodo({ todo, userId }) {
+async function addNewTodo({ todo, userId, isImportant }) {
+  console.log({ todo, userId, isImportant })
+
   const dbConnection = await createDBConnection()
-  const sql = 'INSERT INTO todo (todoId, todo, userId) VALUES (?, ?, ?)'
+  const sql =
+    'INSERT INTO todo (todoId, todo, isImportant, userId) VALUES (?, ?, ?, ?)'
 
   const todoId = crypto.randomUUID()
-  const todoObj = { todoId, todo, userId }
+  const todoObj = { todoId, todo, isImportant, userId }
   const [rows] = await dbConnection.execute(sql, Object.values(todoObj))
 
   const response = {
@@ -30,7 +33,7 @@ async function findUser(userId) {
 async function getAllTodos(userId) {
   const dbConnection = await createDBConnection()
   const sql =
-    'SELECT todoId, todo, updatedAt FROM todo WHERE userId = ? ORDER BY updatedAt DESC'
+    'SELECT todoId, todo, updatedAt, isImportant FROM todo WHERE userId = ? ORDER BY updatedAt DESC'
   const [rows] = await dbConnection.execute(sql, [userId])
 
   await dbConnection.end()
