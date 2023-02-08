@@ -52,9 +52,25 @@ async function removeTodo(todoId) {
   return response
 }
 
+async function updateTodoStatus({ isImportant, todoId }) {
+  const dbConnection = await createDBConnection()
+  const sql = 'UPDATE todo SET isImportant = ? WHERE todoId = ?'
+  const result = await dbConnection.execute(sql, [isImportant, todoId])
+
+  const response = {
+    ok: result.length !== 0 ? true : false,
+    message: 'Task status updated successfully !',
+    result: result,
+  }
+
+  await dbConnection.end()
+  return response
+}
+
 module.exports = {
   addNewTodo,
   findUser,
   getAllTodos,
   removeTodo,
+  updateTodoStatus,
 }
