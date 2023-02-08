@@ -63,27 +63,25 @@ async function removeTodo(req, res) {
   }
 }
 
-async function updateStatus(req, res) {
-  try {
-    const { isImportant, todoId } = req.body
+async function filter(req, res) {
+  const { status } = req.body
 
-    if (isImportant == null || !todoId) {
+  try {
+    if (!status) {
       return res.status(400).json({
-        message: 'Missing paramaters in the request body',
-        isImportant,
-        todoId,
+        message: 'Missing paramater `status` in the request body',
       })
     }
 
-    const updateResp = await services.updateTodoStatus({ isImportant, todoId })
+    const filterResp = await services.filterByStatus(req.body)
 
-    if (!updateResp.ok) {
+    if (!filterResp.ok) {
       return res.status(424).json({
         message: 'Cannot achieve that request',
       })
     }
 
-    res.status(201).json(updateResp)
+    res.status(200).json(filterResp)
   } catch (e) {
     console.log(e)
   }
@@ -93,5 +91,5 @@ module.exports = {
   getTodos,
   createTodo,
   removeTodo,
-  updateStatus,
+  filter,
 }
