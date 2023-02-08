@@ -60,8 +60,35 @@ async function removeTodo(req, res) {
   }
 }
 
+async function updateStatus(req, res) {
+  try {
+    const { isImportant, todoId } = req.body
+
+    if (isImportant == null || !todoId) {
+      return res.status(400).json({
+        message: 'Missing paramaters in the request body',
+        isImportant,
+        todoId,
+      })
+    }
+
+    const updateResp = await services.updateTodoStatus({ isImportant, todoId })
+
+    if (!updateResp.ok) {
+      return res.status(424).json({
+        message: 'Cannot achieve that request',
+      })
+    }
+
+    res.status(201).json(updateResp)
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 module.exports = {
   getTodos,
   createTodo,
   removeTodo,
+  updateStatus,
 }
