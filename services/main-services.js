@@ -8,7 +8,7 @@ async function addNewTodo({ todo, userId, isImportant }) {
     'INSERT INTO todo (todoId, todo, isImportant, userId) VALUES (?, ?, ?, ?)'
 
   const todoId = crypto.randomUUID()
-  const todoObj = { todoId, todo, isImportant, userId }
+  const todoObj = { todoId, todo: todo.toString(), isImportant, userId }
   const [rows] = await dbConnection.execute(sql, Object.values(todoObj))
 
   const response = {
